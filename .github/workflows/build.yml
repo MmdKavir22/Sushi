@@ -14,7 +14,7 @@ concurrency:
 
 env:
   # Gradle used by CI (the project has no wrapper). Change this one line if Loom asks for a newer Gradle.
-  GRADLE_VERSION: "9.3.1"
+  GRADLE_VERSION: "9.5.1"
 
 jobs:
   build:

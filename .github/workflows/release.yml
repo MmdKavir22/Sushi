@@ -28,7 +28,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  GRADLE_VERSION: "9.3.1"
+  GRADLE_VERSION: "9.5.1"
 
 jobs:
   validate:
