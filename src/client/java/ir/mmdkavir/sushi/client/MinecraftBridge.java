@@ -110,7 +110,7 @@ public final class MinecraftBridge implements GameBridge {
 		LocalPlayer p = player();
 		Component c = Component.literal(text);
 		if (actionBar) {
-			mc.gui.setOverlayMessage(c, false);
+			mc.gui.hud.setOverlayMessage(c, false);
 		} else {
 			p.sendSystemMessage(c);
 		}
