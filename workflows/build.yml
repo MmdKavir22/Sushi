@@ -1,0 +1,85 @@
+name: Sushi Build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sushi-build-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Gradle used by CI (the project has no wrapper). Change this one line if Loom asks for a newer Gradle.
+  GRADLE_VERSION: "9.5.1"
+
+jobs:
+  build:
+    name: Build Sushi
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+
+      - name: Set up Gradle (with dependency caching)
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          gradle-version: ${{ env.GRADLE_VERSION }}
+
+      - name: Build and test
+        run: |
+          set -o pipefail
+          gradle build --stacktrace --no-daemon 2>&1 | tee build.log
+
+      - name: Show the real error (on failure)
+        if: failure()
+        run: |
+          {
+            echo "## Build errors"
+            echo '```'
+            grep -n -E "error:|warning: \\[|What went wrong|Execution failed|Caused by|FAILED|cannot find symbol|does not exist|Could not (find|resolve)" -A4 build.log | head -150 || true
+            echo '```'
+          } | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify the built JAR
+        id: verify
+        run: |
+          set -euo pipefail
+          JAR="$(ls build/libs/sushi-*.jar | grep -v -- '-sources.jar' | head -n 1 || true)"
+          if [ -z "$JAR" ] || [ ! -f "$JAR" ]; then
+            echo "::error::No Sushi JAR was produced in build/libs."
+            exit 1
+          fi
+          echo "Found $JAR"
+          unzip -p "$JAR" fabric.mod.json | python3 -c "import json,sys; d=json.load(sys.stdin); assert d['id']=='sushi', 'wrong mod id'; print('fabric.mod.json OK, version', d['version'])"
+          unzip -l "$JAR" | grep -q 'ir/mmdkavir/sushi/client/SushiClient.class' || { echo "::error::Client entrypoint class is missing from the JAR."; exit 1; }
+          echo "jar=$JAR" >> "$GITHUB_OUTPUT"
+
+      - name: Upload JAR artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sushi-jar
+          path: ${{ steps.verify.outputs.jar }}
+          if-no-files-found: error
+
+      - name: Upload build logs and reports (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sushi-build-logs
+          path: |
+            build.log
+            build/reports/
+            build/test-results/
+            **/hs_err_pid*.log
+          if-no-files-found: ignore
