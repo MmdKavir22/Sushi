@@ -107,6 +107,12 @@ public final class MinecraftBridge implements GameBridge {
 
 	@Override
 	public void showMessage(String text, boolean actionBar) {
-		player().displayClientMessage(Component.literal(text), actionBar);
+		LocalPlayer p = player();
+		Component c = Component.literal(text);
+		if (actionBar) {
+			mc.gui.setOverlayMessage(c, false);
+		} else {
+			p.sendSystemMessage(c);
+		}
 	}
 }
