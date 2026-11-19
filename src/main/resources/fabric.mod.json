@@ -3,7 +3,7 @@
   "id": "sushi",
   "version": "${version}",
   "name": "Sushi",
-  "description": "Client-side macro automation and scripting toolkit. Phase 1: GUI shell, profiles, settings, console and versioned macro storage.",
+  "description": "Client-side macro automation and scripting toolkit. GUI shell, profiles, settings, console, versioned macro storage and a permission-gated JavaScript script engine.",
   "authors": ["mmdkavir"],
   "contact": {},
   "license": "All-Rights-Reserved",

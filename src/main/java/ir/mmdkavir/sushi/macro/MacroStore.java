@@ -135,7 +135,7 @@ public final class MacroStore {
 		return readEntry(id, paths.macrosDir(profileId).resolve(id + ".json"));
 	}
 
-	/** Creates a new macro with no events (recording arrives in Phase 2). */
+	/** Creates a new macro with no events (recording is not implemented yet). */
 	public ActionResult createEmpty(String profileId, String rawName) {
 		String name = rawName == null ? "" : rawName.trim();
 		if (name.isEmpty()) {

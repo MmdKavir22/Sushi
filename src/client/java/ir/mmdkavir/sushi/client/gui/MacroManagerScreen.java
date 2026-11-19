@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * Manages the macro files of the active profile: create an empty macro, rename, delete, inspect
- * validation problems. Recording and playback are Phase 2; the editor is Phase 3.
+ * validation problems. Recording, playback and the event editor are not implemented yet.
  */
 public final class MacroManagerScreen extends SushiScreen {
 	private static final int ROW_H = 22;
@@ -133,6 +133,6 @@ public final class MacroManagerScreen extends SushiScreen {
 		if (entries.isEmpty()) {
 			text(g, "No macros yet. Type a name and press Create.", cx, cy + 66, Theme.MUTED);
 		}
-		text(g, "Recording and playback: Phase 2   |   Event editor: Phase 3", cx + 136, height - 40, Theme.MUTED);
+		text(g, "Macro recording, playback and editing: not implemented yet", cx + 136, height - 40, Theme.MUTED);
 	}
 }

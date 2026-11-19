@@ -54,11 +54,11 @@ public final class SettingsScreen extends SushiScreen {
 		y = keyLine(g, "Open Sushi", SushiKeys.openGui, y);
 		y = keyLine(g, "Open Sushi Console", SushiKeys.openConsole, y);
 		y += 6;
-		text(g, "Not yet available: emergency stop, recording and playback keys (Phase 2).", cx, y, Theme.MUTED);
+		text(g, "Not yet available: macro recording/playback keys and emergency stop.", cx, y, Theme.MUTED);
 		y += 16;
 		text(g, "Data folder: " + core().paths().root(), cx, y, Theme.MUTED);
 		y += 12;
-		text(g, "Recording, playback, script, GitHub and overlay settings arrive with their phases.", cx, y, Theme.MUTED);
+		text(g, "Script limits live in settings/settings.json (scriptStartLimitMs, scriptCallbackLimitMs, scriptMaxErrors).", cx, y, Theme.MUTED);
 	}
 
 	private int keyLine(GuiGraphicsExtractor g, String label, KeyMapping key, int y) {

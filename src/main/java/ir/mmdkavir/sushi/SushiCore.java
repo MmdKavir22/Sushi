@@ -4,16 +4,15 @@ import ir.mmdkavir.sushi.config.ConfigManager;
 import ir.mmdkavir.sushi.config.SushiPaths;
 import ir.mmdkavir.sushi.macro.MacroStore;
 import ir.mmdkavir.sushi.profile.ProfileManager;
+import ir.mmdkavir.sushi.script.ScriptManager;
 import ir.mmdkavir.sushi.util.ConsoleLog;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.stream.Stream;
 
 /**
  * Composition root for everything that does not depend on Minecraft. Later phases add their
- * services here (recorder, playback engine, script engine, ...) so the GUI has one place to look.
+ * services here (macro playback, ...) so the GUI has one place to look.
  */
 public final class SushiCore {
 	private static SushiCore instance;
@@ -23,6 +22,7 @@ public final class SushiCore {
 	private final ConfigManager config;
 	private final ProfileManager profiles;
 	private final MacroStore macros;
+	private final ScriptManager scripts;
 
 	private SushiCore(Path configDir) throws IOException {
 		this.paths = new SushiPaths(configDir);
@@ -34,6 +34,7 @@ public final class SushiCore {
 		this.profiles = new ProfileManager(paths, config, console);
 		this.profiles.load();
 		this.macros = new MacroStore(paths, console);
+		this.scripts = new ScriptManager(paths, console, config, profiles);
 	}
 
 	/** Creates the core for the given config directory (tests use a temp directory). */
@@ -58,13 +59,10 @@ public final class SushiCore {
 	public ConfigManager config() { return config; }
 	public ProfileManager profiles() { return profiles; }
 	public MacroStore macros() { return macros; }
+	public ScriptManager scripts() { return scripts; }
 
-	/** Counts {@code *.sushi.js} files in the scripts folder. Scripts cannot run until Phase 4. */
+	/** Counts {@code *.sushi.js} files in the scripts folder (including sub-folders). */
 	public int countScriptFiles() {
-		try (Stream<Path> s = Files.list(paths.scriptsDir())) {
-			return (int) s.filter(p -> p.getFileName().toString().endsWith(".sushi.js")).count();
-		} catch (IOException e) {
-			return 0;
-		}
+		return scripts.store().list().size();
 	}
 }

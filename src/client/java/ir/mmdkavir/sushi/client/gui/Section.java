@@ -4,7 +4,7 @@ package ir.mmdkavir.sushi.client.gui;
 public enum Section {
 	DASHBOARD("Dashboard", 0),
 	MACROS("Macro Manager", 0),
-	SCRIPTS("Script Manager", 4),
+	SCRIPTS("Script Manager", 0),
 	HUB("Script Hub", 5),
 	IMAGES("Image Recognition", 6),
 	OVERLAYS("Overlay Manager", 4),
@@ -31,10 +31,7 @@ public enum Section {
 			case SETTINGS -> new SettingsScreen();
 			case PROFILES -> new ProfilesScreen();
 			case CONSOLE -> new ConsoleScreen();
-			case SCRIPTS -> new PlannedScreen(this, "Planned for Phase 4: script engine",
-					"Run your own .sushi.js scripts in a sandbox with permissions and limits.",
-					"Script files placed in the scripts folder are already counted on the Dashboard,",
-					"but nothing can be run, edited or installed from here yet.");
+			case SCRIPTS -> new ScriptManagerScreen();
 			case HUB -> new PlannedScreen(this, "Planned for Phase 5: GitHub Script Hub",
 					"Browse a GitHub repository's manifest, then download, update and remove scripts.",
 					"Downloaded scripts will never run without your explicit approval.",

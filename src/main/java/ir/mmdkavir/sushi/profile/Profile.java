@@ -11,4 +11,6 @@ public final class Profile {
 	public String id;
 	public String name;
 	public String createdAt;
+	/** Script ids started automatically when this profile becomes active (script engine). May be null in old files. */
+	public java.util.List<String> autoStartScripts = new java.util.ArrayList<>();
 }

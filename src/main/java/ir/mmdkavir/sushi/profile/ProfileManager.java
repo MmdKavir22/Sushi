@@ -211,6 +211,46 @@ public final class ProfileManager {
 		return ActionResult.success("Deleted \"" + p.name + "\". Its macros were moved to macros/.trash.");
 	}
 
+	/** Adds or removes a script id in the profile's auto-start list and saves the profile. */
+	public ActionResult setScriptAutoStart(String profileId, String scriptId, boolean enabled) {
+		Profile p = profiles.get(profileId);
+		if (p == null) {
+			return ActionResult.failure("Profile not found.");
+		}
+		if (p.autoStartScripts == null) {
+			p.autoStartScripts = new ArrayList<>();
+		}
+		boolean changed = enabled ? (!p.autoStartScripts.contains(scriptId) && p.autoStartScripts.add(scriptId))
+				: p.autoStartScripts.remove(scriptId);
+		if (changed) {
+			try {
+				JsonStore.writeAtomic(paths.profilesDir().resolve(profileId + ".json"), p);
+			} catch (IOException e) {
+				console.error("Could not save profile " + p.name, e);
+				return ActionResult.failure("Could not save the profile: " + e.getMessage());
+			}
+		}
+		return ActionResult.success(enabled ? "Auto-start on for profile \"" + p.name + "\"."
+				: "Auto-start off for profile \"" + p.name + "\".");
+	}
+
+	/** Replaces a script id in every profile's auto-start list (used when a script is renamed or deleted; newId may be null). */
+	public void replaceScriptReferences(String oldId, String newId) {
+		for (Profile p : profiles.values()) {
+			if (p.autoStartScripts != null && p.autoStartScripts.contains(oldId)) {
+				p.autoStartScripts.remove(oldId);
+				if (newId != null && !p.autoStartScripts.contains(newId)) {
+					p.autoStartScripts.add(newId);
+				}
+				try {
+					JsonStore.writeAtomic(paths.profilesDir().resolve(p.id + ".json"), p);
+				} catch (IOException e) {
+					console.error("Could not update profile " + p.name, e);
+				}
+			}
+		}
+	}
+
 	public Set<String> ids() {
 		return profiles.keySet();
 	}

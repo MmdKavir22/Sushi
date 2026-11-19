@@ -38,18 +38,19 @@ public final class DashboardScreen extends SushiScreen {
 		y += 16;
 
 		g.fill(cx, y + 1, cx + 7, y + 8, Theme.OK);
-		text(g, "Status: Idle", cx + 12, y, Theme.OK);
-		text(g, "Recording, Playing, Paused, Stopped and Error states arrive with Phase 2.", cx, y + 12, Theme.MUTED);
+		int running = core().scripts().runningCount();
+		text(g, running == 0 ? "Status: Idle" : "Status: " + running + " script(s) running", cx + 12, y, running == 0 ? Theme.OK : Theme.ACCENT);
+		text(g, "Macro recording and playback are not implemented.", cx, y + 12, Theme.MUTED);
 		y += 28;
 
-		text(g, "Running script: none  (script engine: Phase 4)", cx, y, Theme.MUTED);
+		text(g, "Running scripts: " + (running == 0 ? "none" : String.join(", ", core().scripts().runningIds())), cx, y, running == 0 ? Theme.MUTED : Theme.TEXT);
 		y += 12;
-		text(g, "Saved macros: " + macroCount + "   Script files: " + scriptCount + " (cannot run yet)", cx, y, Theme.TEXT);
+		text(g, "Saved macros: " + macroCount + "   Script files: " + scriptCount, cx, y, Theme.TEXT);
 		y += 18;
 
-		text(g, "Available now: profiles, macro files, settings, console, keybinds.", cx, y, Theme.OK);
+		text(g, "Available now: JavaScript scripts, profiles, macro files, settings, console, keybinds.", cx, y, Theme.OK);
 		y += 12;
-		text(g, "Planned: P2 record/playback, P3 editor, P4 scripts+overlays, P5 hub, P6 images.", cx, y, Theme.MUTED);
+		text(g, "Not implemented: macro recording/playback, overlays, script hub, image recognition.", cx, y, Theme.MUTED);
 		y += 18;
 
 		text(g, "Recent activity", cx, y, Theme.ACCENT);

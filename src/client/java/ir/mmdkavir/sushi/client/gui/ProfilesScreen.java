@@ -1,6 +1,7 @@
 package ir.mmdkavir.sushi.client.gui;
 
 import ir.mmdkavir.sushi.profile.Profile;
+import ir.mmdkavir.sushi.util.ActionResult;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -53,7 +54,11 @@ public final class ProfilesScreen extends SushiScreen {
 		Profile active = core().profiles().active();
 		Button switchBtn = Button.builder(Component.literal("Switch"), b -> {
 			if (selectedId != null) {
-				report(core().profiles().switchTo(selectedId));
+				ActionResult switched = core().profiles().switchTo(selectedId);
+				report(switched);
+				if (switched.ok()) {
+					core().scripts().onProfileSwitched();
+				}
 				rebuildWidgets();
 			}
 		}).bounds(cx + 2 * (bw + gap), by, bw, 20).build();
@@ -120,6 +125,6 @@ public final class ProfilesScreen extends SushiScreen {
 	@Override
 	protected void renderContent(GuiGraphicsExtractor g, int mouseX, int mouseY) {
 		text(g, "Profiles (" + profiles.size() + ")", cx, cy - 2, Theme.TEXT);
-		text(g, "Scripts, images, overlays and keybind sets per profile: later phases", cx + 136, height - 40, Theme.MUTED);
+		text(g, "Per profile: macros and script auto-start (Script Manager). Images, overlays: later phases", cx + 136, height - 40, Theme.MUTED);
 	}
 }

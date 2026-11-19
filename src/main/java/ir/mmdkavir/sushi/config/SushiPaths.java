@@ -17,6 +17,9 @@ public final class SushiPaths {
 	public Path macrosDir(String profileId) { return macrosDir().resolve(profileId); }
 	public Path macroTrashDir() { return macrosDir().resolve(".trash"); }
 	public Path scriptsDir() { return root.resolve("scripts"); }
+	public Path scriptsTrashDir() { return scriptsDir().resolve(".trash"); }
+	public Path scriptDataDir() { return scriptsDir().resolve(".data"); }
+	public Path scriptPermissionsFile() { return settingsDir().resolve("script-permissions.json"); }
 	public Path imagesDir() { return root.resolve("images"); }
 	public Path overlaysDir() { return root.resolve("overlays"); }
 	public Path profilesDir() { return root.resolve("profiles"); }

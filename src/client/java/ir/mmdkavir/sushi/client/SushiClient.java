@@ -7,7 +7,7 @@ import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.IOException;
 
-/** Client entrypoint: starts the Minecraft-independent core, then registers keybinds. */
+/** Client entrypoint: starts the Minecraft-independent core, then registers keybinds and script hooks. */
 public final class SushiClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
@@ -18,6 +18,8 @@ public final class SushiClient implements ClientModInitializer {
 			return;
 		}
 		SushiKeys.register();
+		ScriptHooks.register(new MinecraftBridge());
+		SushiCore.get().scripts().startProfileScripts();
 		Sushi.LOGGER.info("Sushi client initialised.");
 	}
 }
