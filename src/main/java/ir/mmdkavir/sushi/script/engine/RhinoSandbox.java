@@ -74,9 +74,8 @@ public final class RhinoSandbox {
 		@Override
 		protected void observeInstructionCount(Context cx, int instructionCount) {
 			if (System.nanoTime() > deadlineNanos) {
-				int[] line = new int[1];
-				Context.getSourcePositionFromStack(line);
-				throw new ScriptLimitError("Script ran longer than " + limitMillis + " ms and was stopped", line[0]);
+				// Rhino does not publicly expose the current line here, so timeouts report line 0 (unknown).
+				throw new ScriptLimitError("Script ran longer than " + limitMillis + " ms and was stopped", 0);
 			}
 		}
 	}
