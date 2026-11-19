@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "sushi",
+  "version": "${version}",
+  "name": "Sushi",
+  "description": "Client-side macro automation and scripting toolkit. Phase 1: GUI shell, profiles, settings, console and versioned macro storage.",
+  "authors": ["mmdkavir"],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["ir.mmdkavir.sushi.client.SushiClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.3",
+    "minecraft": ">=26.2- <26.3-",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}
